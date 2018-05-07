@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2043
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharpSqlViewer", "FSharpSqlViewer\FSharpSqlViewer.fsproj", "{3E280F62-D324-46C1-A002-A5252B3F3871}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3E280F62-D324-46C1-A002-A5252B3F3871}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E280F62-D324-46C1-A002-A5252B3F3871}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E280F62-D324-46C1-A002-A5252B3F3871}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E280F62-D324-46C1-A002-A5252B3F3871}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AC9C2C27-2D2B-4443-948F-7E13083A0F4B}
+	EndGlobalSection
+EndGlobal
