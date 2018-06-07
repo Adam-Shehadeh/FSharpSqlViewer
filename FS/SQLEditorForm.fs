@@ -2,90 +2,93 @@
 
 open System.Windows.Forms
 open System.Drawing
-open SQLDataLayer
+open SQL
 open System.Data
+open System
+open System.Drawing
+open Error_Output
+
+type frm_txt() as a = 
+    inherit Form()
+    let txt_box =
+        let temp = new TextBox()
+        temp.Size <- new Size(665,500)
+        temp.Location <- new Point(0,0)
+        temp.Multiline <- true
+        temp
+    let initialize = 
+        do a.Text <- "F# display"
+        do a.Size <- new Size(665, 500)
+        do a.FormBorderStyle <- FormBorderStyle.FixedSingle
+        do a.BackColor <- Color.LightPink
+        do a.Controls.Add(txt_box)
+    member this.change_txt (text : string) =
+        do txt_box.Text <- text
 
 type SQLEditorForm() as a = 
-        inherit Form()
-        let get_all_rows =
+    inherit Form()
+    let get_all_rows =
+        try
             let dt = new DataTable()
-            dt.Columns.Add("ID") |> ignore
+            //dt.Columns.Add("ID") |> ignore
             dt.Columns.Add("MSG") |> ignore
             for i in SQL.gettable do
                 let dr = dt.NewRow();
-                dr.[0] <- i.ID
-                dr.[1] <- i.MSG
+                dr.[0] <- i.MSG
                 dt.Rows.Add(dr) |> ignore
             dt
-        let lbl_returnsize = 
-            let temp = new Label()
-            temp.Text <- "SHOW:"
-            temp.Size <- new Size(50,20)
-            temp.Location <- new Point(525,55)
-            temp
-        let ddl_returnsize =
-            let temp = new ComboBox()
-            temp.Size <- new Size(50,25)
-            temp.Location <- new Point(575,50)
-            temp.Items.AddRange([|"5"; "10"; "25"; "50"; "100"; "300"|])
-            temp
-        let data_gridview = 
-            let temp = new DataGridView()
-            temp.Location <- new Point(25,75)
-            temp.Size <- new Size(600,350)
-            temp.DataSource <- get_all_rows
-            temp
-        let txt_search = 
-            let temp = new TextBox()
-            temp.Location <- new Point(25,50)
-            temp.Size <- new Size(300,25)
-            temp
-        let btn_search = 
-            let temp = new Button()
-            temp.Location <- new Point(325,50)
-            temp.Size <- new Size(75,20)
-            temp.BackColor <- Color.Black
-            temp.ForeColor <- Color.Cyan
-            temp.Text <- "SEARCH"
-            temp.Name <- "btn_search"
-            temp
-        let btn_new = 
-            let temp = new Button()
-            temp.Location <- new Point(350,430)
-            temp.Size <- new Size(75,20)
-            temp.BackColor <- Color.Cyan
-            temp.ForeColor <- Color.Black
-            temp.Text <- "NEW"
-            temp
-        let btn_edit = 
-            let temp = new Button()
-            temp.Location <- new Point(450,430)
-            temp.Size <- new Size(75,20)
-            temp.BackColor <- Color.Blue
-            temp.ForeColor <- Color.White
-            temp.Text <- "EDIT"
-            temp
-        let btn_delete = 
-            let temp = new Button()
-            temp.Location <- new Point(550,430)
-            temp.Size <- new Size(75,20)
-            temp.BackColor <- Color.Red
-            temp.ForeColor <- Color.White
-            temp.Text <- "DELETE"
-            temp
-        let initialize = 
-            do a.Text <- "F# SQL Editor"
-            do a.Size <- new Size(665, 500)
-            do a.FormBorderStyle <- FormBorderStyle.FixedSingle
-            do a.BackColor <- Color.LightPink
-            do a.Controls.Add(lbl_returnsize)
-            do a.Controls.Add(ddl_returnsize)
-            do a.Controls.Add(data_gridview)
-            do a.Controls.Add(txt_search)
-            do a.Controls.Add(btn_search)
-            do a.Controls.Add(btn_new)
-            do a.Controls.Add(btn_edit)
-            do a.Controls.Add(btn_delete)
-        do initialize
+        with 
+            | ex -> 
+                output_err(ex)
+                new DataTable()
+    let data_gridview = 
+        let temp = new DataGridView()
+        temp.Location <- new Point(25,25)
+        temp.Size <- new Size(600,400)
+        temp.DataSource <- get_all_rows
+        temp
+    let btn_save = 
+        let temp = new Button()
+        temp.Location <- new Point(550,430)
+        temp.Size <- new Size(75,25)
+        temp.BackColor <- Color.Cyan
+        temp.ForeColor <- Color.Black
+        temp.FlatStyle <- FlatStyle.Flat
+        temp.FlatAppearance.BorderColor <- Color.Black
+        temp.FlatAppearance.BorderSize <- 2
+        temp.Text <- "SAVE"
+        temp.Name <- "btnSave"
+        temp
+    let initialize = 
+        do
+            a.Text <- "F# SQL Editor"
+            a.Size <- new Size(665, 500)
+            a.FormBorderStyle <- FormBorderStyle.FixedSingle
+            a.MaximizeBox <- false
+            a.BackColor <- Color.Azure
+            a.Controls.Add(data_gridview)
+            a.Controls.Add(btn_save)
+            a.Icon <- new Icon("cassette_tape.ico")
+        btn_save.Click.Add(fun _ -> 
+            try
+                let rows = seq { for r in 0 .. data_gridview.RowCount - 2 -> data_gridview.Rows.[r].Cells.["MSG"].Value.ToString() }
+                let frm = new frm_txt()
+                MessageBox.Show(SQL.updatetable(rows).ToString()) |> ignore
+                data_gridview.DataSource <- null
+                data_gridview.DataSource <- get_all_rows
+                data_gridview.Columns.[0].Width <- 535
+            with 
+                | ex -> output_err(ex) |> ignore
+            )
+        a.Load.Add(fun _ ->
+            try
+                data_gridview.Columns.[0].Width <- 535
+            with 
+                | ex -> output_err(ex) |> ignore
+            )
+    do initialize
+
+
+
 
         

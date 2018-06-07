@@ -55,13 +55,20 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
+    <Content Include="cassette_tape.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="Error_Output.fs" />
     <Compile Include="SQLDataLayer.fs" />
     <Compile Include="SQLEditorForm.fs" />
-    <Compile Include="FormExecutor.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
     <Content Include="packages.config" />
+    <Content Include="msg_error.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="ic.rc" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
