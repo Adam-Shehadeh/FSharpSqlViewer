@@ -7,13 +7,14 @@
 
 
     let conn = new SqlConnection("Data Source=den1.mssql3.gear.host;Initial Catalog=dbroyann;User ID=dbroyann;Password=Royann317!")
+    let table = "tbl_ForRoyann"
     type RowType =  {
         ID: int 
         MSG: string
     }
 
     let gettable = seq {
-        let cmd = new SqlCommand("SELECT * FROM [dbroyann].[dbo].[tbl_MAIN]", conn)
+        let cmd = new SqlCommand("SELECT * FROM [dbroyann].[dbo].["+table+"]", conn)
         conn.Open()
         use reader = cmd.ExecuteReader()
         while (reader.Read()) do
@@ -22,14 +23,11 @@
     }
 
     let updatetable (data : seq<string>) = 
-        let mutable sqlstr =    "USE [dbroyann]
-        TRUNCATE TABLE tbl_MAIN
-        DBCC CHECKIDENT ('tbl_MAIN', RESEED, 1)
-        "
+        let mutable sqlstr =    "USE [dbroyann] TRUNCATE TABLE " + table+ " DBCC CHECKIDENT ('"+table+"', RESEED, 1)"
         for i in data do
             if i <> "" && not <| String.IsNullOrEmpty(i) then
                 let delim_i = i.Replace("'", "''"); //replaces ' with '' to delimit for SQL insertion
-                sqlstr <- sqlstr + "INSERT [dbo].[tbl_MAIN] ([MSG]) VALUES ('" + delim_i + "')
+                sqlstr <- sqlstr + "INSERT [dbo].["+table+"] ([MSG]) VALUES ('" + delim_i + "')
                 "
         try
             let cmd = new SqlCommand(sqlstr, conn)
